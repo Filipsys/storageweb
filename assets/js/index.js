@@ -70,23 +70,24 @@ app.addEventListener("mousemove", (event) => {
 
 // Animation & render loop
 
-const render = () => {
-    app.innerHTML = "";
-
-    for (const shapeId in shapesData) {
-        const { x, y, width, height, color } = shapesData[shapeId];
-
-        if (x + width > window.innerWidth) {
-            x = window.innerWidth - width;
+function animate() {
+    const render = () => {
+        app.innerHTML = "";
+    
+        for (const shapeId in shapesData) {
+            const { x, y, width, height, color } = shapesData[shapeId];
+    
+            if (x + width > window.innerWidth) {
+                x = window.innerWidth - width;
+            }
+    
+            if (y + height > window.innerHeight) {
+                y = window.innerHeight - height;
+            }
+    
+            createShape(shapeId, x, y, width, height, color);
         }
-
-        if (y + height > window.innerHeight) {
-            y = window.innerHeight - height;
-        }
-
-        createShape(shapeId, x, y, width, height, color);
-    }
-};
+    };
 
     requestAnimationFrame(animate);
 
@@ -105,7 +106,6 @@ const render = () => {
         }
     }
 
-    svgGrid.style.transform = `translate(${-shapesData.shape1.x}px, ${-shapesData.shape1.y}px)`;
     render();
 }
 
