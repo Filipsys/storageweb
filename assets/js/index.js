@@ -88,7 +88,6 @@ const render = () => {
     }
 };
 
-function animate() {
     requestAnimationFrame(animate);
 
     if (isDragging) {
@@ -106,6 +105,7 @@ function animate() {
         }
     }
 
+    svgGrid.style.transform = `translate(${-shapesData.shape1.x}px, ${-shapesData.shape1.y}px)`;
     render();
 }
 
