@@ -62,33 +62,73 @@ app.addEventListener("mousemove", (event) => {
         mouseX = event.clientX;
         mouseY = event.clientY;
 
-        velocityX = deltaX * 0.3;
-        velocityY = deltaY * 0.3;
+        velocityX = deltaX * 0.9;
+        velocityY = deltaY * 0.9;
     }
 });
 
 
+const svgGrid = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+svgGrid.setAttribute("width", "100%");
+svgGrid.setAttribute("height", "100%");
+svgGrid.style.position = "absolute";
+svgGrid.style.top = "0";
+svgGrid.style.left = "0";
+svgGrid.style.zIndex = "-1";
+
+function createGrid() {
+    const gridSize = 50;
+    const gridWidth = window.innerWidth;
+    const gridHeight = window.innerHeight;
+
+    for (let x = 0; x <= gridWidth; x += gridSize) {
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", x);
+        line.setAttribute("y1", 0);
+        line.setAttribute("x2", x);
+        line.setAttribute("y2", gridHeight);
+        line.setAttribute("stroke", "#ccc");
+        svgGrid.appendChild(line);
+    }
+
+    for (let y = 0; y <= gridHeight; y += gridSize) {
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", 0);
+        line.setAttribute("y1", y);
+        line.setAttribute("x2", gridWidth);
+        line.setAttribute("y2", y);
+        line.setAttribute("stroke", "#ccc");
+        svgGrid.appendChild(line);
+    }
+
+    app.appendChild(svgGrid);
+}
+
+createGrid();
+
+
 // Animation & render loop
 
-const render = () => {
-    app.innerHTML = "";
-
-    for (const shapeId in shapesData) {
-        const { x, y, width, height, color } = shapesData[shapeId];
-
-        if (x + width > window.innerWidth) {
-            x = window.innerWidth - width;
-        }
-
-        if (y + height > window.innerHeight) {
-            y = window.innerHeight - height;
-        }
-
-        createShape(shapeId, x, y, width, height, color);
-    }
-};
-
 function animate() {
+    const render = () => {
+        app.innerHTML = "";
+        app.appendChild(svgGrid);
+
+        for (const shapeId in shapesData) {
+            const { x, y, width, height, color } = shapesData[shapeId];
+
+            if (x + width > window.innerWidth) {
+                x = window.innerWidth - width;
+            }
+
+            if (y + height > window.innerHeight) {
+                y = window.innerHeight - height;
+            }
+
+            createShape(shapeId, x, y, width, height, color);
+        }
+    };
+
     requestAnimationFrame(animate);
 
     if (isDragging) {
@@ -106,6 +146,7 @@ function animate() {
         }
     }
 
+    svgGrid.style.transform = `translate(${-shapesData.shape1.x}px, ${-shapesData.shape1.y}px)`;
     render();
 }
 
