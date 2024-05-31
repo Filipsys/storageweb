@@ -62,33 +62,33 @@ app.addEventListener("mousemove", (event) => {
         mouseX = event.clientX;
         mouseY = event.clientY;
 
-        velocityX = deltaX * 0.3;
-        velocityY = deltaY * 0.3;
+        velocityX = deltaX * 0.9;
+        velocityY = deltaY * 0.9;
     }
 });
 
 
 // Animation & render loop
 
-const render = () => {
-    app.innerHTML = "";
-
-    for (const shapeId in shapesData) {
-        const { x, y, width, height, color } = shapesData[shapeId];
-
-        if (x + width > window.innerWidth) {
-            x = window.innerWidth - width;
-        }
-
-        if (y + height > window.innerHeight) {
-            y = window.innerHeight - height;
-        }
-
-        createShape(shapeId, x, y, width, height, color);
-    }
-};
-
 function animate() {
+    const render = () => {
+        app.innerHTML = "";
+    
+        for (const shapeId in shapesData) {
+            const { x, y, width, height, color } = shapesData[shapeId];
+    
+            if (x + width > window.innerWidth) {
+                x = window.innerWidth - width;
+            }
+    
+            if (y + height > window.innerHeight) {
+                y = window.innerHeight - height;
+            }
+    
+            createShape(shapeId, x, y, width, height, color);
+        }
+    };
+
     requestAnimationFrame(animate);
 
     if (isDragging) {
