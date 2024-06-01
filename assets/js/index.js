@@ -3,13 +3,15 @@
 const app = document.getElementById("app");
 
 let shapesData = {};
+let shapeIsDragging = false;
 let isDragging = false;
+let isHolding = false;
 let mouseX = 0;
 let mouseY = 0;
+
 let velocityX = 0;
 let velocityY = 0;
 
-let shapeIsDragging = false;
 
 
 // Functions
@@ -37,6 +39,8 @@ function createShape(shapeId, x, y, width, height, color) {
 
     app.appendChild(shape);
 
+
+    // Mouse events
 
     shape.addEventListener("mousedown", (event) => {
         shapeIsDragging = true;
@@ -92,21 +96,24 @@ saveShape("shape3", 200, 700, 100, 100, "#0000ff");
 // Events
 
 app.addEventListener("mousedown", (event) => {
-    isDragging = true;
+    isDragging = false;
+    isHolding = true;
     mouseX = event.clientX;
     mouseY = event.clientY;
 });
 
 app.addEventListener("mouseup", (event) => {
     isDragging = false;
+    isHolding = false;
 });
 
 app.addEventListener("mouseleave", (event) => {
     isDragging = false;
+    isHolding = false;
 });
 
 app.addEventListener("mousemove", (event) => {
-    if (isDragging) {
+    if (isHolding) {
         const deltaX = event.clientX - mouseX;
         const deltaY = event.clientY - mouseY;
 
@@ -116,6 +123,13 @@ app.addEventListener("mousemove", (event) => {
         velocityX = deltaX * 0.6;
         velocityY = deltaY * 0.6;
     }
+});
+
+app.addEventListener("wheel", (event) => {
+    // TODO: Add zooming
+
+    event.preventDefault();
+    event.stopPropagation();
 });
 
 
