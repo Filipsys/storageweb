@@ -4,6 +4,7 @@ const app = document.getElementById("app");
 
 let shapesData = {};
 let shapeIsDragging = false;
+let selectedShapeScale = 1;
 let isDragging = false;
 let isHolding = false;
 let mouseX = 0;
@@ -18,10 +19,12 @@ let velocityY = 0;
 
 function showActiveShapeSelected(shapeId) {
     shapesData[shapeId].isSelected = true;
+    shapesData[shapeId].isNotSelected = false;
 }
 
 function hideActiveShapeSelected(shapeId) {
     shapesData[shapeId].isSelected = false;
+    shapesData[shapeId].isNotSelected = true;
 }
 
 
@@ -44,6 +47,7 @@ function createShape(shapeId, x, y, width, height, color) {
 
     shape.addEventListener("mousedown", (event) => {
         shapeIsDragging = true;
+        selectedShapeScale = 1;
         mouseX = event.clientX;
         mouseY = event.clientY;
 
@@ -52,12 +56,14 @@ function createShape(shapeId, x, y, width, height, color) {
 
     shape.addEventListener("mouseup", (event) => {
         shapeIsDragging = false;
+        selectedShapeScale = 1;
 
         hideActiveShapeSelected(shapeId);
     });
 
     shape.addEventListener("mouseleave", (event) => {
         shapeIsDragging = false;
+        selectedShapeScale = 1;
 
         hideActiveShapeSelected(shapeId);
     });
@@ -147,7 +153,16 @@ function animate() {
             if (shapesData[shapeId].isSelected) {
                 const selectedShape = document.getElementById(shapeId);
 
-                selectedShape.style.transform = `scale(1.1)`;
+                const interval = setInterval(() => {
+                    if (selectedShapeScale < 1.1) {
+                        selectedShapeScale += 0.01;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 100);
+
+                selectedShape.style.scale = selectedShapeScale;
+
             }
         }
     };
