@@ -162,7 +162,6 @@ function animate() {
                 }, 100);
 
                 selectedShape.style.scale = selectedShapeScale;
-
             }
         }
     };
@@ -188,3 +187,36 @@ function animate() {
 }
 
 animate();
+
+
+
+// Config section
+
+const configSection = document.getElementById("config-section");
+configSection.style.left = "-20vw"; // Making sure it's not visible
+
+const hideConfigButton = document.getElementById("hide-config");
+hideConfigButton.style.left = "0px";
+
+
+hideConfigButton.addEventListener("click", () => {
+    const hideConfig = document.getElementById("hide-config");
+    const hideConfigIcon = document.getElementById("hide-config-icon");
+
+    if (configSection.style.left == "0px") {
+        configSection.style.left = "-20vw";
+
+        hideConfig.style.left = "0px";
+        hideConfigIcon.style.rotate = "0deg";
+    } else {
+        configSection.style.left = "0px";
+
+        hideConfig.style.left = "20vw";
+        hideConfigIcon.style.rotate = "180deg";
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const configSection = document.getElementById("config-section");
+    configSection.style.transition = "left 0.1s ease-in-out";
+});
