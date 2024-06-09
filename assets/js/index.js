@@ -1,5 +1,3 @@
-// Main app
-
 const app = document.getElementById("app");
 
 let shapesData = {};
@@ -27,8 +25,7 @@ function hideActiveShapeSelected(shapeId) {
     shapesData[shapeId].isNotSelected = true;
 }
 
-
-function createShape(shapeId, x, y, width, height, color) {
+function createShape(shapeId, x, y, width, height, dataType, data, color) {
     const shape = document.createElement("div");
     shape.classList.add("note-box");
     shape.style.position = "absolute";
@@ -43,7 +40,7 @@ function createShape(shapeId, x, y, width, height, color) {
     app.appendChild(shape);
 
 
-    // Mouse events
+    // Mouse events for the shape
 
     shape.addEventListener("mousedown", (event) => {
         shapeIsDragging = true;
@@ -85,14 +82,20 @@ function createShape(shapeId, x, y, width, height, color) {
     });
 }
 
-function saveShape(shapeId, x, y, width, height, color) {
-    shapesData[shapeId] = { x, y, width, height, color };
+function saveShape(x, y, width, height, dataType = "text", dataLink = null, data = null, color) {
+    // shapesData[shapeId] = { x, y, width, height, color };
+    
+    axios.post("http://localhost:3000/api/save", {
+        x, y,
+        width, height,
+        dataType, dataLink, data,
+        color
+    }).then((response) => {
+        console.log(response);
+    });
 }
 
 
-saveShape("shape1", 100, 100, 100, 100, "#ff0000");
-saveShape("shape2", 400, 200, 100, 100, "#00ff00");
-saveShape("shape3", 200, 700, 100, 100, "#0000ff");
 
 // for (const shapeId in shapesData) {
 //     createShape(shapeId, shapesData[shapeId].x, shapesData[shapeId].y, shapesData[shapeId].width, shapesData[shapeId].height, shapesData[shapeId].color);
@@ -186,9 +189,6 @@ function animate() {
     render();
 }
 
-animate();
-
-
 
 // Config section
 
@@ -216,7 +216,20 @@ hideConfigButton.addEventListener("click", () => {
     }
 });
 
+
+// Initialization
+
 document.addEventListener("DOMContentLoaded", () => {
+    // saveShape("shape1", 100, 100, 100, 100, "#ff0000");
+    // saveShape("shape2", 400, 200, 100, 100, "#00ff00");
+    // saveShape("shape3", 200, 700, 100, 100, "#0000ff");
+
+    axios.get("http://localhost:3000/api/getData").then((response) => {
+        console.log(response.data);
+    });
+
+    animate();
+
     const configSection = document.getElementById("config-section");
     configSection.style.transition = "left 0.1s ease-in-out";
 });
