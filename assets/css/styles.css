@@ -4,6 +4,10 @@ html {
 
 body {
     margin: 0;
+
+    overflow: hidden;
+
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 *,
@@ -13,7 +17,110 @@ body {
     margin: 0;
 }
 
+#config-section {
+    width: 20vw;
+    height: 100vh;
+
+    position: absolute;
+    top: 0;
+    left: -20vw;
+    z-index: 10;
+
+    background-color: rgb(201, 197, 197);
+
+    transition: left 0.1s ease-in-out;
+}
+
+.config-section__navbar {
+    width: 100%;
+    height: 70px;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.config-section__content {
+    width: 100%;
+    height: calc(100vh - 50px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-item__wrapper {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    cursor: pointer;
+}
+
+.navbar-item {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 10px;
+}
+
+#hide-config {
+    width: 30px;
+    height: 50px;
+
+    position: absolute;
+    top: calc(50vh - 25px);
+    right: calc(100% - 20vw - 30px);
+    z-index: 10;
+
+    background-color: rgb(201, 197, 197);
+    border-radius: 0 10px 10px 0;
+
+    cursor: pointer;
+
+    transition: left 0.1s ease-in-out;
+}
+
+#hide-config__wrapper {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#hide-config__wrapper #hide-config-icon {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+
+    user-select: none;
+
+    transition: rotate 0.1s ease-in-out;
+    rotate: 0deg;
+}
+
 #app {
     width: 100%;
     height: 100vh;
+}
+
+.note-box {
+    width: 250px;
+    height: 200px;
+    background-color: rgb(236, 233, 233);
+    border: 3px solid rgb(236, 233, 233); /* Soon for different colors for categories */
+    border-radius: 10px;
+    box-shadow: 0px 0px 55px -22px rgba(0, 0, 0, 0.753);
 }
