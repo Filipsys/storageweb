@@ -1,3 +1,5 @@
+// import { main } from "bun";
+
 const app = document.getElementById("app");
 
 let shapesData = {};
@@ -223,6 +225,148 @@ document.addEventListener("DOMContentLoaded", () => {
     // saveShape("shape1", 100, 100, 100, 100, "#ff0000");
     // saveShape("shape2", 400, 200, 100, 100, "#00ff00");
     // saveShape("shape3", 200, 700, 100, 100, "#0000ff");
+
+    const createButton = document.getElementsByClassName("navbar-item")[0];
+
+    createButton.addEventListener("click", () => {
+        const shapeBg = document.getElementsByClassName("popup-bg")[0];
+        shapeBg.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+        shapeBg.style.pointerEvents = "auto";
+        
+        const shapePopup = document.createElement("div");
+        shapePopup.classList.add("popup-shape");
+        
+        setTimeout(() => {
+            shapePopup.style.opacity = "1";
+        }, 1);
+
+        const popupCloseButton = document.createElement("div");
+        popupCloseButton.classList.add("material-symbols-rounded", "popup__close-button");
+        popupCloseButton.innerText = "close";
+        shapePopup.appendChild(popupCloseButton);
+
+        popupCloseButton.addEventListener("click", () => {
+            shapeBg.style.backgroundColor = "transparent";
+            shapeBg.style.pointerEvents = "none";
+
+            shapePopup.style.opacity = "0";
+
+            setTimeout(() => {
+                shapePopup.remove();
+
+                shapeBg.style.backgroundColor = "transparent";
+                shapeBg.style.pointerEvents = "none";
+            }, 300);
+        });
+
+        const popupContainer = document.createElement("div");
+        popupContainer.classList.add("popup-container");
+        shapePopup.appendChild(popupContainer);
+
+        const mainContainer = document.createElement("div");
+        mainContainer.classList.add("popup-main-container");
+        popupContainer.appendChild(mainContainer);
+
+        const mainAreaTitle = document.createElement("h3");
+        mainAreaTitle.classList.add("popup-title");
+        mainAreaTitle.innerText = "Choose your desired element type";
+        mainContainer.appendChild(mainAreaTitle);
+
+        const mainArea = document.createElement("div");
+        mainArea.classList.add("popup-main-area");
+        mainContainer.appendChild(mainArea);
+
+        const linkElement = document.createElement("div");
+        linkElement.classList.add("popup-main-area-link", "element-type-button-pick");
+        const linkElementIcon = document.createElement("i");
+        linkElementIcon.classList.add("material-symbols-rounded", "popup-main-area-link-icon");
+        linkElementIcon.innerText = "link";
+        // linkElement.appendChild(document.createTextNode("Link"));
+        const linkElementLabel = document.createElement("p");
+        linkElementLabel.classList.add("popup-main-area-link-label");
+        linkElementLabel.innerText = "Link";
+        linkElement.appendChild(linkElementIcon);
+        linkElement.appendChild(linkElementLabel);
+
+        const imageElement = document.createElement("div");
+        imageElement.classList.add("popup-main-area-image", "element-type-button-pick");
+        const imageElementIcon = document.createElement("i");
+        imageElementIcon.classList.add("material-symbols-rounded", "popup-main-area-image-icon");
+        imageElementIcon.innerText = "image";
+        // imageElement.appendChild(document.createTextNode("Image"));
+        const imageElementLabel = document.createElement("p");
+        imageElementLabel.classList.add("popup-main-area-image-label");
+        imageElementLabel.innerText = "Image";
+        imageElement.appendChild(imageElementIcon);
+        imageElement.appendChild(imageElementLabel);
+
+        const textElement = document.createElement("div");
+        textElement.classList.add("popup-main-area-text", "element-type-button-pick");
+        const textElementIcon = document.createElement("i");
+        textElementIcon.classList.add("material-symbols-rounded", "popup-main-area-text-icon");
+        textElementIcon.innerText = "text_fields";
+        // textElement.appendChild(document.createTextNode("Text"));
+        const textElementLabel = document.createElement("p");
+        textElementLabel.classList.add("popup-main-area-text-label");
+        textElementLabel.innerText = "Text";
+        textElement.appendChild(textElementIcon);
+        textElement.appendChild(textElementLabel);
+
+        mainArea.appendChild(linkElement);
+        mainArea.appendChild(imageElement);
+        mainArea.appendChild(textElement);
+
+        const btnsList = [linkElement, imageElement, textElement];
+        let btnIndex = 0;
+
+        for (const btn of btnsList) {
+            const shineDiv = document.createElement("div");
+            shineDiv.classList.add("shine-div");
+            shineDiv.id = `shine-div-${btnIndex}`;
+
+            btn.appendChild(shineDiv);
+            btnIndex++;
+            
+            
+            // pickElementButton.addEventListener("mouseover", () => {
+            //     const shineDiv = document.createElement("div");
+            //     shineDiv.classList.add("shine-div");
+            //     pickElementButton.appendChild(shineDiv);
+
+            //     shineDiv.style.left = pickElementButton.offsetLeft + "px";
+            // });
+
+            // pickElementButton.addEventListener("mouseout", () => {
+            //     const shineDiv = document.getElementsByClassName("shine-div")[0];
+                
+            //     shineDiv.style.left = "0px";
+
+            //     setTimeout(() => {
+            //         shineDiv.remove();
+            //     }, 300);
+            // });
+
+            btn.addEventListener("mouseover", () => {
+                const shineDiv = document.getElementById(`shine-div-${btnsList.indexOf(btn)}`);
+                    
+                setTimeout(() => {
+                    shineDiv.style.left = "15px";
+                }, 30);
+            });
+
+            btn.addEventListener("mouseout", () => {
+                const shineDiv = document.getElementById(`shine-div-${btnsList.indexOf(btn)}`);
+                shineDiv.style.left = "-100px";
+
+                // setTimeout(() => {
+                //     shineDiv.remove();
+                // }, 100);
+            });
+        }
+        
+        shapeBg.appendChild(shapePopup);
+    });
+    
 
     axios.get("http://localhost:3000/api/getData").then((response) => {
         console.log(response.data);
