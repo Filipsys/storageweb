@@ -33,11 +33,15 @@ function createShape(shapeId, x, y, width, height, dataType, data, color) {
     shape.style.position = "absolute";
     shape.style.left = x + "px";
     shape.style.top = y + "px";
-    // shape.style.width = width + "px";
-    // shape.style.height = height + "px";
+    shape.style.width = width + "px";
+    shape.style.height = height + "px";
     // shape.style.backgroundColor = color;
     shape.style.border = `3px solid ${color}`;
     shape.id = shapeId;
+
+    if (dataType == "text") {
+        shape.innerHTML = data;
+    }
 
     app.appendChild(shape);
 
@@ -84,9 +88,11 @@ function createShape(shapeId, x, y, width, height, dataType, data, color) {
     });
 }
 
-function saveShape(x, y, width, height, dataType = "text", dataLink = null, data = null, color) {
+function createShape(x, y, width, height, dataType = "text", dataLink = null, data = null, color) {
     // shapesData[shapeId] = { x, y, width, height, color };
-    
+
+    console.log(x, y, width, height, dataType, dataLink, data, color);
+
     axios.post("http://localhost:3000/api/save", {
         x, y,
         width, height,
@@ -151,9 +157,9 @@ function animate() {
         app.innerHTML = "";
 
         for (const shapeId in shapesData) {
-            const { x, y, width, height, color } = shapesData[shapeId];
+            // const { x, y, width, height, color } = shapesData[shapeId];
 
-            createShape(shapeId, x, y, width, height, color);
+            // createShape(x = 100, y = 100, width = 100, height = 100, dataType = "text", dataLink = null, data = "Hello World", color = "#ff0000");
 
             if (shapesData[shapeId].isSelected) {
                 const selectedShape = document.getElementById(shapeId);
@@ -222,9 +228,9 @@ hideConfigButton.addEventListener("click", () => {
 // Initialization
 
 document.addEventListener("DOMContentLoaded", () => {
-    // saveShape("shape1", 100, 100, 100, 100, "#ff0000");
-    // saveShape("shape2", 400, 200, 100, 100, "#00ff00");
-    // saveShape("shape3", 200, 700, 100, 100, "#0000ff");
+    // createShape("shape1", 100, 100, 100, 100, "#ff0000");
+    // createShape("shape2", 400, 200, 100, 100, "#00ff00");
+    // createShape("shape3", 200, 700, 100, 100, "#0000ff");
 
     const createButton = document.getElementsByClassName("navbar-item")[0];
 
@@ -232,10 +238,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const shapeBg = document.getElementsByClassName("popup-bg")[0];
         shapeBg.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
         shapeBg.style.pointerEvents = "auto";
-        
+
         const shapePopup = document.createElement("div");
         shapePopup.classList.add("popup-shape");
-        
+
         setTimeout(() => {
             shapePopup.style.opacity = "1";
         }, 1);
@@ -245,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
         popupCloseButton.innerText = "close";
         shapePopup.appendChild(popupCloseButton);
 
-        popupCloseButton.addEventListener("click", () => {
+        function closePopup() {
             shapeBg.style.backgroundColor = "transparent";
             shapeBg.style.pointerEvents = "none";
 
@@ -257,7 +263,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 shapeBg.style.backgroundColor = "transparent";
                 shapeBg.style.pointerEvents = "none";
             }, 300);
-        });
+        }
+
+        popupCloseButton.addEventListener("click", closePopup);
 
         const popupContainer = document.createElement("div");
         popupContainer.classList.add("popup-container");
@@ -326,29 +334,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             btn.appendChild(shineDiv);
             btnIndex++;
-            
-            
-            // pickElementButton.addEventListener("mouseover", () => {
-            //     const shineDiv = document.createElement("div");
-            //     shineDiv.classList.add("shine-div");
-            //     pickElementButton.appendChild(shineDiv);
-
-            //     shineDiv.style.left = pickElementButton.offsetLeft + "px";
-            // });
-
-            // pickElementButton.addEventListener("mouseout", () => {
-            //     const shineDiv = document.getElementsByClassName("shine-div")[0];
-                
-            //     shineDiv.style.left = "0px";
-
-            //     setTimeout(() => {
-            //         shineDiv.remove();
-            //     }, 300);
-            // });
 
             btn.addEventListener("mouseover", () => {
                 const shineDiv = document.getElementById(`shine-div-${btnsList.indexOf(btn)}`);
-                    
+
                 setTimeout(() => {
                     shineDiv.style.left = "15px";
                 }, 30);
@@ -357,19 +346,65 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.addEventListener("mouseout", () => {
                 const shineDiv = document.getElementById(`shine-div-${btnsList.indexOf(btn)}`);
                 shineDiv.style.left = "-100px";
+            });
 
-                // setTimeout(() => {
-                //     shineDiv.remove();
-                // }, 100);
+            btn.addEventListener("click", () => {
+                closePopup();
+
+                switch (btnsList.indexOf(btn)) {
+                    case 0:
+                        createShape(x = 100, y = 100, width = 100, height = 100, dataType = "link", dataLink = "https://www.google.com", data = null, color = "#ff0000");
+                        break;
+                    case 1:
+                        createShape(x = 100, y = 100, width = 100, height = 100, dataType = "image", dataLink = "https://i.imgur.com/y1h0hKc.png", data = null, color = "#ff0000");
+                        break;
+                    case 2:
+                        createShape(x = 100, y = 100, width = 100, height = 100, dataType = "text", dataLink = null, data = "Hello World", color = "#ff0000");
+                        break;
+                }
             });
         }
-        
+
         shapeBg.appendChild(shapePopup);
     });
-    
 
-    axios.get("http://localhost:3000/api/getData").then((response) => {
-        console.log(response.data);
+
+    axios.get("http://localhost:3000/api/load").then((response) => {
+        const responseData = response.data;
+
+        console.log(responseData);
+
+        // [
+        //     {
+        //         "id": 2,
+        //         "x": 100,
+        //         "y": 100,
+        //         "width": 100,
+        //         "height": 100,
+        //         "dataType": "text",
+        //         "dataLink": null,
+        //         "data": "Hello World",
+        //         "color": "#ff0000"
+        //     }
+        // ]
+
+        for (let i = 0; i < responseData.length; i++) {
+            const shape = responseData[i];
+
+            switch (shape.dataType) {
+                case "link":
+                    createShape(x = shape.x, y = shape.y, width = shape.width, height = shape.height, dataType = "link", dataLink = shape.dataLink, data = null, color = shape.color);
+                    break;
+                case "image": {
+                    createShape(x = shape.x, y = shape.y, width = shape.width, height = shape.height, dataType = "image", dataLink = shape.dataLink, data = null, color = shape.color);
+                    break;
+                }
+                case "text": {
+                    createShape(x = shape.x, y = shape.y, width = shape.width, height = shape.height, dataType = "text", dataLink = null, data = shape.data, color = shape.color);
+                    break;
+                }
+            }
+        }
     });
 
     animate();

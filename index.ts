@@ -39,18 +39,19 @@ function saveData(x: number, y: number, width: number, height: number, dataType:
 // Start the main server //
 
 const server = Bun.serve({
-    fetch(request: Request): Response {
+    async fetch(request: Request): Promise<Response> {
         const url = new URL(request.url);
         let path: string = url.pathname === "/" ? "/templates/index.html" : url.pathname;
 
-        if (url.pathname === "/api/getData") {
+        if (request.method === "GET" && url.pathname === "/api/load") {
             return new Response(JSON.stringify(getData()), { status: 200 });
+        }
 
-        } else if (url.pathname === "/api/save") {
+        if (request.method === "POST" && url.pathname === "/api/save") {
             const db = new Database("assets/storage/data.sqlite");
+            const requestData = await request.json();
 
-            const { x, y, width, height, dataType, dataLink, data, color } = request.body as unknown as { x: number, y: number, width: number, height: number, dataType: string, dataLink: string, data: string, color: string };
-
+            const { x, y, width, height, dataType, dataLink, data, color } = requestData as unknown as { x: number, y: number, width: number, height: number, dataType: string, dataLink: string, data: string, color: string };
             saveData(x, y, width, height, dataType, dataLink, data, color);
 
             db.close();
@@ -88,5 +89,5 @@ const server = Bun.serve({
 
 // Main setup //
 
-// initDatabase();
+initDatabase();
 console.log(`Server started at port ${server.port}`);
