@@ -1,70 +1,154 @@
-// import { main } from "bun";
-
-let shapesData = {};
+let oldSavedData = [];
+let savedData = {};
 let shapeIsDragging = false;
+let shapeIsResizing = false;  // New variable to manage resizing state
+let shapeIsEditingText = false;  // New variable to manage editing text state
+let shapeTextElement = null;
+let updateIntervalMs = 100;
+let currentInterval = 0;
 let selectedShapeScale = 1;
+let selectedShapeId = null;
 let isDragging = false;
 let isHolding = false;
 let mouseX = 0;
 let mouseY = 0;
+let initialMouseX = 0;  // New variable to track initial mouse position for resizing
+let initialMouseY = 0;
+let initialShapeWidth = 0;  // New variable to track initial shape size
+let initialShapeHeight = 0;
 
 let velocityX = 0;
 let velocityY = 0;
 
+const minShapeWidth = 100;
+const minShapeHeight = 100;
 
 
 // Functions
 
 function showActiveShapeSelected(shapeId) {
-    shapesData[shapeId].isSelected = true;
-    shapesData[shapeId].isNotSelected = false;
+    savedData[shapeId].isSelected = true;
+    savedData[shapeId].isNotSelected = false;
 }
 
 function hideActiveShapeSelected(shapeId) {
-    shapesData[shapeId].isSelected = false;
-    shapesData[shapeId].isNotSelected = true;
+    savedData[shapeId].isSelected = false;
+    savedData[shapeId].isNotSelected = true;
 }
 
-function createShape(shapeId, x, y, width, height, dataType, data, color) {
+function createShape(shapeId, x, y, width, height, dataType, dataLink, data, color) {
     const shape = document.createElement("div");
     shape.classList.add("note-box");
-    shape.style.position = "absolute";
     shape.style.left = x + "px";
     shape.style.top = y + "px";
     shape.style.width = width + "px";
     shape.style.height = height + "px";
-    // shape.style.backgroundColor = color;
     shape.style.border = `3px solid ${color}`;
     shape.id = shapeId;
 
-    if (dataType == "text") {
+    if (dataType === "text") {
         shape.innerHTML = data;
+    } else if (dataType === "image") {
+        shape.style.backgroundImage = `url(${dataLink})`;
+    } else if (dataType === "link") {
+        shape.innerHTML = `<a href="${dataLink}" target="_blank">${dataLink}</a>`;
+        shape.style.cursor = "pointer";
+        shape.style.width = "auto";
     }
 
-    const appElement = document.getElementById("app");
-    appElement.appendChild(shape);
+    // const resizeIcon = document.createElement("i");
+    // resizeIcon.classList.add("material-symbols-rounded", "resize-icon");
+    // resizeIcon.id = `resize-icon-${shapeId}`;
+    // resizeIcon.innerText = "drag_indicator";
+    // shape.appendChild(resizeIcon);
+
+    // const editIcon = document.createElement("i");
+    // editIcon.classList.add("material-symbols-rounded", "edit-icon");
+    // editIcon.id = `edit-icon-${shapeId}`;
+    // editIcon.innerText = "edit_square";
+    // shape.appendChild(editIcon);
+
+    const resizeIcon = document.createElement("i");
+    resizeIcon.classList.add("material-symbols-rounded", "resize-icon");
+    resizeIcon.id = `resize-icon-${shapeId}`;
+    resizeIcon.innerText = "drag_indicator";
+    shape.appendChild(resizeIcon);
 
 
-    // Mouse events for the shape
+    const editMenu = document.createElement("div");
+    editMenu.classList.add("edit-menu");
+    editMenu.id = `edit-menu-${shapeId}`;
+    shape.appendChild(editMenu);
+
+    const editIcon = document.createElement("i");
+    editIcon.classList.add("material-symbols-rounded", "edit-icon");
+    editIcon.id = `edit-icon-${shapeId}`;
+    editIcon.innerText = "edit_square";
+    editMenu.appendChild(editIcon);
+
+    const deleteIcon = document.createElement("i");
+    deleteIcon.classList.add("material-symbols-rounded", "delete-icon");
+    deleteIcon.id = `delete-icon-${shapeId}`;
+    deleteIcon.innerText = "delete";
+    editMenu.appendChild(deleteIcon);
+
+
+    document.getElementById("app").appendChild(shape);
+
+
+    // shape.addEventListener("click", () => {
+    //     const deleteIcon = document.getElementById(`delete-icon-${shapeId}`);
+    // });
+
+    deleteIcon.addEventListener("mouseup", () => {
+        selectedShapeId = shapeId;
+        shape.remove();
+
+        deleteShape(selectedShapeId.split("-")[1]);
+    });
 
     shape.addEventListener("mousedown", (event) => {
-        shapeIsDragging = true;
-        selectedShapeScale = 1;
-        mouseX = event.clientX;
-        mouseY = event.clientY;
+        const resizeIcon = document.getElementById(`resize-icon-${shapeId}`);
 
+        if (event.target === resizeIcon) {
+            shapeIsResizing = true;
+            initialMouseX = event.clientX;
+            initialMouseY = event.clientY;
+            initialShapeWidth = shape.offsetWidth;
+            initialShapeHeight = shape.offsetHeight;
+        } else if (event.target === editIcon) {
+            shapeIsResizing = false;
+            shapeIsDragging = false;
+            selectedShapeId = shapeId;
+
+            // make text editable
+
+            const textElement = document.getElementById(`shape-${shapeId}`);
+            textElement.contentEditable = true;
+        } else {
+            shapeIsDragging = true;
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+        }
+
+        selectedShapeId = shapeId;
         showActiveShapeSelected(shapeId);
     });
 
-    shape.addEventListener("mouseup", (event) => {
+    shape.addEventListener("mouseup", () => {
         shapeIsDragging = false;
+        shapeIsResizing = false;
         selectedShapeScale = 1;
+
+        updatePosition(savedData[selectedShapeId].x, savedData[selectedShapeId].y, selectedShapeId.split("-")[1]);
+        updateDimensions(savedData[selectedShapeId].width, savedData[selectedShapeId].height, selectedShapeId.split("-")[1]);
 
         hideActiveShapeSelected(shapeId);
     });
 
-    shape.addEventListener("mouseleave", (event) => {
+    shape.addEventListener("mouseleave", () => {
         shapeIsDragging = false;
+        shapeIsResizing = false;
         selectedShapeScale = 1;
 
         hideActiveShapeSelected(shapeId);
@@ -72,42 +156,84 @@ function createShape(shapeId, x, y, width, height, dataType, data, color) {
 
     shape.addEventListener("mousemove", (event) => {
         if (shapeIsDragging) {
-            const shapeX = shapesData[shapeId].x;
-            const shapeY = shapesData[shapeId].y;
+            const shapeX = savedData[shapeId].x;
+            const shapeY = savedData[shapeId].y;
 
             const newShapeX = shapeX + event.clientX - mouseX;
             const newShapeY = shapeY + event.clientY - mouseY;
 
-            shapesData[shapeId].x = newShapeX;
-            shapesData[shapeId].y = newShapeY;
+            savedData[shapeId].x = newShapeX;
+            savedData[shapeId].y = newShapeY;
 
             mouseX = event.clientX;
             mouseY = event.clientY;
+        }
+
+        if (shapeIsResizing) {
+            const deltaX = event.clientX - initialMouseX;
+            const deltaY = event.clientY - initialMouseY;
+            let newWidth = initialShapeWidth + deltaX;
+            let newHeight = initialShapeHeight + deltaY;
+
+            if (newWidth < minShapeWidth) {
+                newWidth = minShapeWidth;
+            }
+
+            if (newHeight < minShapeHeight) {
+                newHeight = minShapeHeight;
+            }
+
+            shape.style.width = newWidth + "px";
+            shape.style.height = newHeight + "px";
+
+            savedData[shapeId].width = newWidth;
+            savedData[shapeId].height = newHeight;
+
+            // const newWidth = initialShapeWidth + deltaX;
+            // const newHeight = initialShapeHeight + deltaY;
+
+            // shape.style.width = newWidth + "px";
+            // shape.style.height = newHeight + "px";
+
+            // savedData[shapeId].width = newWidth;
+            // savedData[shapeId].height = newHeight;
         }
     });
 }
 
 function saveShape(x, y, width, height, dataType = "text", dataLink = null, data = null, color) {
-    // shapesData[shapeId] = { x, y, width, height, color };
-
     console.log(x, y, width, height, dataType, dataLink, data, color);
 
     axios.post("http://localhost:3000/api/save", {
-        x, y,
-        width, height,
-        dataType, dataLink, data,
-        color
+        x, y, width, height, dataType, dataLink, data, color
     }).then((response) => {
         console.log(response);
     });
 }
 
+function updatePosition(x, y, selectedShapeId) {
+    axios.post("http://localhost:3000/api/updatePosition", {
+        x, y, selectedShapeId
+    }).then((response) => {
+        console.log(response);
+    });
+}
 
+function updateDimensions(width, height, selectedShapeId) {
+    axios.post("http://localhost:3000/api/updateDimensions", {
+        width, height, selectedShapeId
+    }).then((response) => {
+        console.log(response);
+    });
+}
 
-// for (const shapeId in shapesData) {
-//     createShape(shapeId, shapesData[shapeId].x, shapesData[shapeId].y, shapesData[shapeId].width, shapesData[shapeId].height, shapesData[shapeId].color);
-// }
-
+function deleteShape(selectedShapeId) {
+    axios.post("http://localhost:3000/api/delete", {
+        selectedShapeId
+    }).then((response) => {
+        console.log(response);
+    });
+}
 
 // Events
 
@@ -118,18 +244,18 @@ app.addEventListener("mousedown", (event) => {
     mouseY = event.clientY;
 });
 
-app.addEventListener("mouseup", (event) => {
+app.addEventListener("mouseup", () => {
     isDragging = false;
     isHolding = false;
 });
 
-app.addEventListener("mouseleave", (event) => {
+app.addEventListener("mouseleave", () => {
     isDragging = false;
     isHolding = false;
 });
 
 app.addEventListener("mousemove", (event) => {
-    if (isHolding) {
+    if (isHolding && !shapeIsResizing) {
         const deltaX = event.clientX - mouseX;
         const deltaY = event.clientY - mouseY;
 
@@ -138,6 +264,11 @@ app.addEventListener("mousemove", (event) => {
 
         velocityX = deltaX * 0.6;
         velocityY = deltaY * 0.6;
+
+        for (const shapeId in savedData) {
+            savedData[shapeId].x += velocityX;
+            savedData[shapeId].y += velocityY;
+        }
     }
 });
 
@@ -148,71 +279,88 @@ app.addEventListener("wheel", (event) => {
     event.stopPropagation();
 });
 
-
 // Animation & render loop
-
 
 function showAllShapes(shapeData) {
     for (const shape in shapeData) {
         let currentShape = shapeData[shape];
-        
+
         switch (currentShape.dataType) {
             case "link":
-                createShape(x = currentShape.x, y = currentShape.y, width = currentShape.width, height = currentShape.height, dataType = "link", dataLink = currentShape.dataLink, data = null, color = currentShape.color, id = currentShape.id);
+                createShape(
+                    shapeId = `shape-${currentShape.id}`,
+                    x = currentShape.x, y = currentShape.y,
+                    width = currentShape.width, height = currentShape.height,
+                    dataType = "link", dataLink = currentShape.dataLink, data = null,
+                    color = currentShape.color
+                );
                 break;
-            case "image": {
-                createShape(x = currentShape.x, y = currentShape.y, width = currentShape.width, height = currentShape.height, dataType = "image", dataLink = currentShape.dataLink, data = null, color = currentShape.color);
+            case "image":
+                createShape(
+                    shapeId = `shape-${currentShape.id}`,
+                    x = currentShape.x, y = currentShape.y,
+                    width = currentShape.width, height = currentShape.height,
+                    dataType = "image", dataLink = currentShape.dataLink, data = null,
+                    color = currentShape.color
+                );
                 break;
-            }
-            case "text": {
-                createShape(x = currentShape.x, y = currentShape.y, width = currentShape.width, height = currentShape.height, dataType = "text", dataLink = null, data = currentShape.data, color = currentShape.color);
+            case "text":
+                createShape(
+                    shapeId = `shape-${currentShape.id}`,
+                    x = currentShape.x, y = currentShape.y,
+                    width = currentShape.width, height = currentShape.height,
+                    dataType = "text", dataLink = null, data = currentShape.data,
+                    color = currentShape.color
+                );
                 break;
-            }
         }
     }
 }
 
-function animate(shapeData) {
-    const savedData = shapeData;
-
+function animate() {
     const render = () => {
         app.innerHTML = "";
 
-        showAllShapes(savedData);
+        // if (currentInterval < updateIntervalMs) {
+        //     currentInterval += 1;
+        // } else {
+        //     currentInterval = 0;
 
-        // for (const shapeId in shapesData) {
-            // const { x, y, width, height, color } = shapesData[shapeId];
+        //     if (!isDragging || !isHolding || !shapeIsDragging || !shapeIsResizing) {
+        //         axios.get("http://localhost:3000/api/load").then((response) => {
+        //             oldSavedData = response.data;
 
-            // if (shapesData[shapeId].isSelected) {
-            //     const selectedShape = document.getElementById(shapeId);
+        //             oldSavedData.forEach((shape) => {
+        //                 shape["isSelected"] = false;
+        //                 shape["isNotSelected"] = true;
+        //             });
 
-            //     const interval = setInterval(() => {
-            //         if (selectedShapeScale < 1.1) {
-            //             selectedShapeScale += 0.01;
-            //         } else {
-            //             clearInterval(interval);
-            //         }
-            //     }, 100);
+        //             oldSavedData.forEach((shape) => {
+        //                 savedData[`shape-${shape.id}`] = shape;
+        //             });
+        //         });
 
-            //     selectedShape.style.scale = selectedShapeScale;
-            // }
+        //         console.log("New data loaded");
+        //     }
         // }
+
+        showAllShapes(savedData);
     };
 
     requestAnimationFrame(animate);
 
     if (isDragging) {
-        for (const shapeId in shapesData) {
-            shapesData[shapeId].x += velocityX;
-            shapesData[shapeId].y += velocityY;
+        for (const shapeId in savedData) {
+            savedData[shapeId].x += velocityX;
+            savedData[shapeId].y += velocityY;
         }
     } else {
         velocityX *= 0.85;
         velocityY *= 0.85;
 
-        for (const shapeId in shapesData) {
-            shapesData[shapeId].x += velocityX;
-            shapesData[shapeId].y += velocityY;
+        for (const shapeId in savedData) {
+            savedData[shapeId].x += velocityX;
+            savedData[shapeId].y += velocityY;
         }
     }
 
@@ -228,31 +376,37 @@ configSection.style.left = "-20vw"; // Making sure it's not visible
 const hideConfigButton = document.getElementById("hide-config");
 hideConfigButton.style.left = "0px";
 
-
 hideConfigButton.addEventListener("click", () => {
     const hideConfig = document.getElementById("hide-config");
     const hideConfigIcon = document.getElementById("hide-config-icon");
 
-    if (configSection.style.left == "0px") {
+    if (configSection.style.left === "0px") {
         configSection.style.left = "-20vw";
-
         hideConfig.style.left = "0px";
         hideConfigIcon.style.rotate = "0deg";
     } else {
         configSection.style.left = "0px";
-
         hideConfig.style.left = "20vw";
         hideConfigIcon.style.rotate = "180deg";
     }
 });
 
-
 // Initialization
 
 document.addEventListener("DOMContentLoaded", () => {
-    // createShape("shape1", 100, 100, 100, 100, "#ff0000");
-    // createShape("shape2", 400, 200, 100, 100, "#00ff00");
-    // createShape("shape3", 200, 700, 100, 100, "#0000ff");
+    axios.get("http://localhost:3000/api/load").then((response) => {
+        oldSavedData = response.data.map(shape => ({
+            ...shape,
+            isSelected: false,
+            isNotSelected: true
+        }));
+
+        oldSavedData.forEach((shape) => {
+            savedData[`shape-${shape.id}`] = shape;
+        });
+
+        animate(savedData);
+    });
 
     const createButton = document.getElementsByClassName("navbar-item")[0];
 
@@ -276,12 +430,10 @@ document.addEventListener("DOMContentLoaded", () => {
         function closePopup() {
             shapeBg.style.backgroundColor = "transparent";
             shapeBg.style.pointerEvents = "none";
-
             shapePopup.style.opacity = "0";
 
             setTimeout(() => {
                 shapePopup.remove();
-
                 shapeBg.style.backgroundColor = "transparent";
                 shapeBg.style.pointerEvents = "none";
             }, 300);
@@ -311,7 +463,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const linkElementIcon = document.createElement("i");
         linkElementIcon.classList.add("material-symbols-rounded", "popup-main-area-link-icon");
         linkElementIcon.innerText = "link";
-        // linkElement.appendChild(document.createTextNode("Link"));
         const linkElementLabel = document.createElement("p");
         linkElementLabel.classList.add("popup-main-area-link-label");
         linkElementLabel.innerText = "Link";
@@ -323,7 +474,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const imageElementIcon = document.createElement("i");
         imageElementIcon.classList.add("material-symbols-rounded", "popup-main-area-image-icon");
         imageElementIcon.innerText = "image";
-        // imageElement.appendChild(document.createTextNode("Image"));
         const imageElementLabel = document.createElement("p");
         imageElementLabel.classList.add("popup-main-area-image-label");
         imageElementLabel.innerText = "Image";
@@ -335,7 +485,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const textElementIcon = document.createElement("i");
         textElementIcon.classList.add("material-symbols-rounded", "popup-main-area-text-icon");
         textElementIcon.innerText = "text_fields";
-        // textElement.appendChild(document.createTextNode("Text"));
         const textElementLabel = document.createElement("p");
         textElementLabel.classList.add("popup-main-area-text-label");
         textElementLabel.innerText = "Text";
@@ -345,16 +494,18 @@ document.addEventListener("DOMContentLoaded", () => {
         mainArea.appendChild(linkElement);
         mainArea.appendChild(imageElement);
         mainArea.appendChild(textElement);
+        
 
         const btnsList = [linkElement, imageElement, textElement];
         let btnIndex = 0;
 
         for (const btn of btnsList) {
             const shineDiv = document.createElement("div");
+
             shineDiv.classList.add("shine-div");
             shineDiv.id = `shine-div-${btnIndex}`;
-
             btn.appendChild(shineDiv);
+
             btnIndex++;
 
             btn.addEventListener("mouseover", () => {
@@ -375,15 +526,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 switch (btnsList.indexOf(btn)) {
                     case 0:
-                        saveShape(x = 100, y = 100, width = 100, height = 100, dataType = "link", dataLink = "https://www.google.com", data = null, color = "#ff0000");
+                        saveShape(x = 100, y = 100, width = 100, height = 100, dataType = "link", dataLink = "https://www.google.com", data = null, color = "var(--champagne-pink)");
                         console.log("link");
                         break;
                     case 1:
-                        saveShape(x = 100, y = 100, width = 100, height = 100, dataType = "image", dataLink = "https://i.imgur.com/y1h0hKc.png", data = null, color = "#ff0000");
+                        saveShape(x = 100, y = 100, width = 100, height = 100, dataType = "image", dataLink = "https://i.imgur.com/y1h0hKc.png", data = null, color = "var(--champagne-pink)");
                         console.log("image");
                         break;
                     case 2:
-                        saveShape(x = 100, y = 100, width = 100, height = 100, dataType = "text", dataLink = null, data = "Hello World", color = "#ff0000");
+                        saveShape(x = 100, y = 100, width = 100, height = 100, dataType = "text", dataLink = null, data = "Hello World", color = "var(--champagne-pink)");
                         console.log("text");
                         break;
                 }
@@ -391,13 +542,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         shapeBg.appendChild(shapePopup);
-    });
-
-    axios.get("http://localhost:3000/api/load").then((response) => {
-        const savedData = response.data;
-        console.log(savedData);
-        
-        animate(savedData); 
     });
 
     const configSection = document.getElementById("config-section");

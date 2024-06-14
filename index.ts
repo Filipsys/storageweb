@@ -59,6 +59,48 @@ const server = Bun.serve({
             return new Response(JSON.stringify({ success: true }), { status: 200 });
         }
 
+        if (request.method === "POST" && url.pathname === "/api/updatePosition") {
+            const db = new Database("assets/storage/data.sqlite");
+            const requestData = await request.json();
+
+            const { x, y, selectedShapeId } = requestData as unknown as { x: number, y: number, selectedShapeId: string };
+            
+            const query = db.prepare("UPDATE dataShapes SET x = ?, y = ? WHERE id = ?");
+            query.run(x, y, selectedShapeId);
+
+            db.close();
+
+            return new Response(JSON.stringify({ success: true }), { status: 200 });
+        }
+
+        if (request.method === "POST" && url.pathname === "/api/updateDimensions") {
+            const db = new Database("assets/storage/data.sqlite");
+            const requestData = await request.json();
+
+            const { width, height, selectedShapeId } = requestData as unknown as { width: number, height: number, selectedShapeId: string };
+            
+            const query = db.prepare("UPDATE dataShapes SET width = ?, height = ? WHERE id = ?");
+            query.run(width, height, selectedShapeId);
+
+            db.close();
+
+            return new Response(JSON.stringify({ success: true }), { status: 200 });
+        }
+
+        if (request.method === "POST" && url.pathname === "/api/delete") {
+            const db = new Database("assets/storage/data.sqlite");
+            const requestData = await request.json();
+
+            const { selectedShapeId } = requestData as unknown as { selectedShapeId: string };
+            
+            const query = db.prepare("DELETE FROM dataShapes WHERE id = ?");
+            query.run(selectedShapeId);
+
+            db.close();
+
+            return new Response(JSON.stringify({ success: true }), { status: 200 });
+        }
+
         try {
             //? Get the file path from the URL
 
