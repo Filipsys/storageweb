@@ -6,7 +6,6 @@ let shapeIsEditingText = false;  // New variable to manage editing text state
 let shapeTextElement = null;
 let updateIntervalMs = 100;
 let currentInterval = 0;
-let selectedShapeScale = 1;
 let selectedShapeId = null;
 let isDragging = false;
 let isHolding = false;
@@ -22,6 +21,9 @@ let velocityY = 0;
 
 const minShapeWidth = 100;
 const minShapeHeight = 100;
+
+
+const gridSvgHtml = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" viewBox="0 0 800 800" opacity="1" width="800" height="800"><g stroke-width="1.5" stroke="hsla(0, 0%, 100%, 1.00)" fill="none"><circle r="1.763157894736842" cx="0" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="0" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="66.66666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="133.33333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="200" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="266.6666666666667" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="333.33333333333337" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="400.00000000000006" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="466.66666666666674" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="533.3333333333334" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="600" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="666.6666666666666" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="733.3333333333333" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="0" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="66.66666666666667" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="133.33333333333334" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="200" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="266.6666666666667" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="333.33333333333337" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="400.00000000000006" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="466.66666666666674" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="533.3333333333334" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="600" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="666.6666666666666" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="733.3333333333333" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle><circle r="1.763157894736842" cx="799.9999999999999" cy="799.9999999999999" fill="hsla(0, 0%, 100%, 1.00)" stroke="none"></circle></g></svg>'
 
 
 // Functions
@@ -55,18 +57,6 @@ function createShape(shapeId, x, y, width, height, dataType, dataLink, data, col
         shape.style.cursor = "pointer";
         shape.style.width = "auto";
     }
-
-    // const resizeIcon = document.createElement("i");
-    // resizeIcon.classList.add("material-symbols-rounded", "resize-icon");
-    // resizeIcon.id = `resize-icon-${shapeId}`;
-    // resizeIcon.innerText = "drag_indicator";
-    // shape.appendChild(resizeIcon);
-
-    // const editIcon = document.createElement("i");
-    // editIcon.classList.add("material-symbols-rounded", "edit-icon");
-    // editIcon.id = `edit-icon-${shapeId}`;
-    // editIcon.innerText = "edit_square";
-    // shape.appendChild(editIcon);
 
     const resizeIcon = document.createElement("i");
     resizeIcon.classList.add("material-symbols-rounded", "resize-icon");
@@ -109,6 +99,7 @@ function createShape(shapeId, x, y, width, height, dataType, dataLink, data, col
 
     shape.addEventListener("mousedown", (event) => {
         const resizeIcon = document.getElementById(`resize-icon-${shapeId}`);
+        selectedShapeId = shapeId;
 
         if (event.target === resizeIcon) {
             shapeIsResizing = true;
@@ -119,26 +110,24 @@ function createShape(shapeId, x, y, width, height, dataType, dataLink, data, col
         } else if (event.target === editIcon) {
             shapeIsResizing = false;
             shapeIsDragging = false;
-            selectedShapeId = shapeId;
-
-            // make text editable
 
             const textElement = document.getElementById(`shape-${shapeId}`);
             textElement.contentEditable = true;
         } else {
             shapeIsDragging = true;
+
             mouseX = event.clientX;
             mouseY = event.clientY;
         }
 
-        selectedShapeId = shapeId;
         showActiveShapeSelected(shapeId);
     });
 
     shape.addEventListener("mouseup", () => {
         shapeIsDragging = false;
         shapeIsResizing = false;
-        selectedShapeScale = 1;
+
+        console.log(savedData[selectedShapeId]);
 
         updatePosition(savedData[selectedShapeId].x, savedData[selectedShapeId].y, selectedShapeId.split("-")[1]);
         updateDimensions(savedData[selectedShapeId].width, savedData[selectedShapeId].height, selectedShapeId.split("-")[1]);
@@ -149,7 +138,6 @@ function createShape(shapeId, x, y, width, height, dataType, dataLink, data, col
     shape.addEventListener("mouseleave", () => {
         shapeIsDragging = false;
         shapeIsResizing = false;
-        selectedShapeScale = 1;
 
         hideActiveShapeSelected(shapeId);
     });
@@ -188,17 +176,35 @@ function createShape(shapeId, x, y, width, height, dataType, dataLink, data, col
 
             savedData[shapeId].width = newWidth;
             savedData[shapeId].height = newHeight;
-
-            // const newWidth = initialShapeWidth + deltaX;
-            // const newHeight = initialShapeHeight + deltaY;
-
-            // shape.style.width = newWidth + "px";
-            // shape.style.height = newHeight + "px";
-
-            // savedData[shapeId].width = newWidth;
-            // savedData[shapeId].height = newHeight;
         }
     });
+}
+
+function createGridAroundViewport() {
+    const gridSvg = gridSvgHtml;
+    // const gridSvgElement = document.createElement("div");
+    // gridSvgElement.classList.add("grid-svg");
+    // gridSvgElement.innerHTML = gridSvg;
+    // app.appendChild(gridSvgElement);
+
+    for (let i = 0; i < 5; i++) {
+        const gridSvgElement = document.createElement("div");
+        gridSvgElement.classList.add("grid-svg");
+        gridSvgElement.innerHTML = gridSvg;
+
+        gridSvgElement.style.top = i * 400 + "px";
+        gridSvgElement.style.width = "400px";
+        gridSvgElement.style.height = "400px";
+
+        gridSvgElement.style.position = "absolute";
+        gridSvgElement.style.zIndex = "10";
+        gridSvgElement.style.pointerEvents = "none";
+        
+
+        gridSvgElement.style.left = i * 400 + "px";
+
+        app.appendChild(gridSvgElement);
+    }
 }
 
 function saveShape(x, y, width, height, dataType = "text", dataLink = null, data = null, color) {
@@ -269,6 +275,8 @@ app.addEventListener("mousemove", (event) => {
             savedData[shapeId].x += velocityX;
             savedData[shapeId].y += velocityY;
         }
+
+        createGridAroundViewport();
     }
 });
 
@@ -278,6 +286,7 @@ app.addEventListener("wheel", (event) => {
     event.preventDefault();
     event.stopPropagation();
 });
+
 
 // Animation & render loop
 
@@ -321,29 +330,7 @@ function animate() {
     const render = () => {
         app.innerHTML = "";
 
-        // if (currentInterval < updateIntervalMs) {
-        //     currentInterval += 1;
-        // } else {
-        //     currentInterval = 0;
-
-        //     if (!isDragging || !isHolding || !shapeIsDragging || !shapeIsResizing) {
-        //         axios.get("http://localhost:3000/api/load").then((response) => {
-        //             oldSavedData = response.data;
-
-        //             oldSavedData.forEach((shape) => {
-        //                 shape["isSelected"] = false;
-        //                 shape["isNotSelected"] = true;
-        //             });
-
-        //             oldSavedData.forEach((shape) => {
-        //                 savedData[`shape-${shape.id}`] = shape;
-        //             });
-        //         });
-
-        //         console.log("New data loaded");
-        //     }
-        // }
-
+        createGridAroundViewport();
         showAllShapes(savedData);
     };
 

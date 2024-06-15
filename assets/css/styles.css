@@ -357,16 +357,23 @@ body {
     position: relative;
 }
 
+.grid-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+
+    width: 400px;
+    height: 400px;
+}
+
 .note-box {
     position: absolute;
-    /* width: 250px;
-    height: 200px; */
     color: var(--champagne-pink);
     font-size: large;
-    background-color: var(--caribbean-current);
-    /* border: 3px solid var(--persian-red); */
+    background: linear-gradient(135deg, rgba(45,159,166,1) 0%, rgba(25,114,120,1) 100%);
     border-radius: 10px;
-    box-shadow: 0px 0px 55px -22px rgba(255, 255, 255, 0.295);
+    box-shadow: 0px 0px 55px -22px rgba(255, 255, 255, 0.24), inset 0px 0px 24px 0px rgba(28, 65, 83, 0.404);
     padding: 10px;
 }
 
