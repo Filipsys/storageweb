@@ -42,6 +42,7 @@ function MyComponent(): JSX.Element {
     return <>{data}</>;
 }
 
+
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <Fullscreen>
