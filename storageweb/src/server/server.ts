@@ -16,7 +16,7 @@ const corsOptions ={
 app.use(cors(corsOptions));
 // app.use(express.json());
 
-app.get("/api/data", (_request, response) => {
+app.get("/api/data", (_request: any, response: { send: (arg0: any) => void; }) => {
   let data = db.prepare("SELECT * FROM elements").all();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
