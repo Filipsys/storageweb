@@ -1,0 +1,46 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+
+  --dark-slate-gray: #283d3bff;
+  --darker-slate-gray: #1e2e3bff;
+  --caribbean-current: #197278ff;
+  --carribbean-current-lighter: #549292ff;
+  --champagne-pink: #edddd4ff;
+  --darker-champagne-pink: #edddd4a8;
+  --persian-red: #c44536ff;
+  --burnt-umber: #772e25ff;
+}
+
+body {
+  overflow: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  margin: 0;
+}
+
+.note-element {
+  padding: 10px;
+  border-radius: 10px;
+  
+  font-size: large;
+  color: var(--champagne-pink);
+
+  background: linear-gradient(135deg, rgba(45,159,166,1) 0%, rgba(25,114,120,1) 100%);
+  box-shadow: 0px 0px 55px -22px rgba(255, 255, 255, 0.24), inset 0px 0px 24px 0px rgba(28, 65, 83, 0.404);
+}
+
+.note-element a {
+  color: var(--darker-slate-gray);
+  text-decoration: none;
+}
+
+.note-element > p {
+  display: block;
+}
