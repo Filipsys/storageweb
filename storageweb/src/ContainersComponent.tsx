@@ -9,13 +9,18 @@ import { fetchData } from "./fetchData";
 //     4: "yellow",
 // }
 
-export default async function ContainersComponent() {
+export default function ContainersComponent() {
     const [containers, setContainers] = useState<JSX.Element[]>([]);
-    const data = await fetchData();
+    
+    const fetchDataAsync = async () => {
+        const result = await fetchData();
+
+        return result;
+    };
+    const data = fetchDataAsync();
 
     useEffect(() => {
         const containerElements = [];
-        
 
         // for (let i = 1; i <= Object.keys(ContainersDict).length; i++) {
         //     containerElements.push(<Container flexGrow={1} key={i} backgroundColor={ContainersDict[i]} gap={10} positionType={"absolute"} width={100} height={100} positionTop={0 + i * 100} positionLeft={0 + i * 100} />);
