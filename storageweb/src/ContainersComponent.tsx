@@ -1,38 +1,31 @@
 import { Container } from "@react-three/uikit";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { fetchData } from "./fetchData";
 
-// const ContainersDict: { [key: number]: string } = {
-//     1: "red",
-//     2: "blue",
-//     3: "green",
-//     4: "yellow",
-// }
+// =====|=====|=====
+
+let data: Array<unknown> = [];
+async function fetchDataAsync() {
+    data = await fetchData();
+}
+
+fetchDataAsync();
+
+// =====|=====|=====
 
 export default function ContainersComponent() {
     const [containers, setContainers] = useState<JSX.Element[]>([]);
-    
-    const fetchDataAsync = async () => {
-        const result = await fetchData();
 
-        return result;
-    };
-    const data = fetchDataAsync();
+    console.log(data);
 
     useEffect(() => {
-        const containerElements = [];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data.forEach((element: any) => {
+            setContainers((prevContainers: JSX.Element[]) => {
+                return [...prevContainers, <Container key={element.id} borderRadius={10} padding={10} borderWidth={3} borderColor={element.color} backgroundColor={"#197278"} gap={10} positionType={"absolute"} width={element.width} height={element.height} positionTop={element.y} positionLeft={element.x}></Container>];
+            });
+        });
+    }, []);
 
-        // for (let i = 1; i <= Object.keys(ContainersDict).length; i++) {
-        //     containerElements.push(<Container flexGrow={1} key={i} backgroundColor={ContainersDict[i]} gap={10} positionType={"absolute"} width={100} height={100} positionTop={0 + i * 100} positionLeft={0 + i * 100} />);
-        // }
-
-        for (const element of data) {
-            containerElements.push(<Container flexGrow={1} key={element.id} backgroundColor={element.color} gap={10} positionType={"absolute"} width={element.width} height={element.height} positionTop={element.y} positionLeft={element.x} />);
-        }
-
-        setContainers(containerElements);
-    }, [data]);
-
-    
     return <>{containers}</>;
 }
