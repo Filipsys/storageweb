@@ -8,5 +8,13 @@ export async function fetchData() {
         }
     });
 
-    return response.json();
+    const data = await response.json();
+
+    data.forEach((element: { data: string | null; }) => {
+        if (element.data === null) {
+            element.data = "<empty>";
+        }
+    });
+
+    return data;
 }
