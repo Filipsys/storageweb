@@ -1,32 +1,21 @@
 import { Container, Text } from "@react-three/uikit";
 import { useEffect, useState } from "react";
-import { fetchData } from "./fetchData";
-import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import { Html } from "@react-three/drei"
+import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 
 
 // =====/=====/=====
 
 
 interface ContainersComponentProps {
-    data: Array<unknown>;
+    data: {
+        [x: string]: any;
+    };
 }
 
 const ContainersComponent: React.FC<ContainersComponentProps> = ({ data }) => {
-    // const [data, setData] = useState<Array<unknown>>([]);
     const [containers, setContainers] = useState<JSX.Element[]>([]);
-
-    // useEffect(() => {
-    //     async function fetchDataAsync() {
-    //         const fetchedData = await fetchData();
-    //         setData(fetchedData);
-    //     }
-
-    //     fetchDataAsync();
-    // }, []);
-
-    console.log(data);
-    
+    data = data["data"];
 
     useEffect(() => {
         if (data.length > 0) {
@@ -36,14 +25,14 @@ const ContainersComponent: React.FC<ContainersComponentProps> = ({ data }) => {
 
                     <Container positionType={"absolute"} positionBottom={10} positionRight={10} width={10} height={10} margin={10}>
                         <Html>
-                            <div style={{"cursor": "sw-resize"}} onPointerDown={() => console.log('down')} onPointerUp={() => console.log('up')}>
+                            <div style={{ "cursor": "sw-resize" }} onPointerDown={() => console.log('down')} onPointerUp={() => console.log('up')}>
                                 <DragIndicatorRoundedIcon />
                             </div>
                         </Html>
                     </Container>
                 </Container>
             ));
-            
+
             setContainers(newContainers);
         }
     }, [data]);
