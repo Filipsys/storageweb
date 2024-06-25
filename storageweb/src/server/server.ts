@@ -1,11 +1,16 @@
 import express from "express";
 import { Database } from "bun:sqlite";
 
-// =====|=====|=====
+
+// =====/=====/=====/=====
+
 
 const db = new Database("./src/database/storage.sqlite");
 const app = express();
 const port = 3000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 import cors from "cors";
 const corsOptions = {
@@ -14,7 +19,9 @@ const corsOptions = {
   optionSuccessStatus: 200
 };
 
-// =====|=====|=====
+
+// =====/=====/=====/=====
+
 
 app.use(cors(corsOptions));
 // app.use(express.json());
@@ -38,7 +45,32 @@ app.get("/api/data", (_request: unknown, response: { send: (arg0: unknown) => vo
   response.send(data);
 });
 
-// =====|=====|=====
+
+app.post("/api/savePosition", (request: express.Request, response: express.Response) => {
+  if (!request.body || typeof request.body !== 'object') {
+    return response.status(400).send({ error: 'Invalid request body' });
+  }
+
+  const { id, x, y } = request.body;
+
+  // if (typeof id !== 'string' || typeof x !== 'number' || typeof y !== 'number') {
+  //   return response.status(400).send({ error: 'Invalid data types in request body' });
+  // }
+
+  try {
+    db.prepare("UPDATE elements SET x = ?, y = ? WHERE id = ?").run(x, y, id);
+
+    response.status(200).send({ success: true });
+  } catch (error) {
+    console.error('Error updating element position:', error);
+    
+    response.status(500).send({ error: 'Internal server error' });
+  }
+});
+
+
+// =====/=====/=====/=====
+
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
