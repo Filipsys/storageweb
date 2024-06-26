@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { Fullscreen } from "@react-three/uikit";
 import AddElementButton from "./AddElementButton";
 import ContainersComponent from "./ContainersComponent";
+import Navbar from "./Navbar";
 
 import "./index.css";
 import "./App.css";
@@ -14,9 +15,10 @@ import "./App.css";
 const App = (data: any) => {
     return (
         <StrictMode>
-            <Canvas style={{ backgroundColor: "#1e2e3b" }}>
+            <Canvas style={{ backgroundColor: "#161718" }}>
                 <Fullscreen flexDirection="row" gap={10} positionType={"relative"}>
                     <AddElementButton />
+                    <Navbar />
 
                     <ContainersComponent data={data} />
                 </Fullscreen>

@@ -53,10 +53,6 @@ app.post("/api/savePosition", (request: express.Request, response: express.Respo
 
   const { id, x, y } = request.body;
 
-  // if (typeof id !== 'string' || typeof x !== 'number' || typeof y !== 'number') {
-  //   return response.status(400).send({ error: 'Invalid data types in request body' });
-  // }
-
   try {
     db.prepare("UPDATE elements SET x = ?, y = ? WHERE id = ?").run(x, y, id);
 
