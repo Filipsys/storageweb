@@ -8,14 +8,14 @@ const AddElementButton = () => {
 
     useEffect(() => {
         setAddElementButton(
-            <Container positionType={"absolute"} positionBottom={5} positionLeft={5} width={50} height={50} margin={5} backgroundColor={"#197278"} borderRadius={10} borderWidth={3} borderColor={"#edddd4"}  onClick={() => {
+            <Container positionType={"absolute"} positionBottom={5} positionLeft={5} width={50} height={50} margin={5} backgroundColor={"#0e4145"} borderRadius={10} borderWidth={3} borderColor={"#12585d"}  onClick={() => {
                 console.log("Add element button clicked");
             }} onPointerOver={() => {
                 console.log("Add element button hovered");
             }} onPointerOut={() => {
                 console.log("Add element button unhovered");
             }}>
-                <Text fontSize={40} color={"#edddd4"} width={50} textAlign={"center"} verticalAlign={"middle"}>+</Text>
+                <Text fontSize={40} color={"#dbd2ff"} width={50} textAlign={"center"} verticalAlign={"middle"}>+</Text>
             </Container>
         );
     }, []);

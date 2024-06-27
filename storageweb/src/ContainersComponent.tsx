@@ -93,8 +93,8 @@ const ContainersComponent: React.FC<ContainersComponentProps> = ({ data }) => {
                         borderRadius={10}
                         padding={10}
                         borderWidth={3}
-                        borderColor={element.color}
-                        backgroundColor={"#197278"}
+                        borderColor={"#12585d"}
+                        backgroundColor={"#0e4145"}
                         positionType={"absolute"}
                         width={element.width}
                         height={element.height}
