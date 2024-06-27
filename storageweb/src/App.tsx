@@ -3,7 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { Fullscreen } from "@react-three/uikit";
 import AddElementButton from "./components/AddElementButton";
 import ContainersComponent from "./components/ContainersComponent";
-import Navbar from "./Navbar";
+import Navbar from "./components/Navbar";
 
 import "./index.css";
 import "./App.css";
