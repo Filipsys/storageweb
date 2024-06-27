@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchData } from "./fetchData";
+import { fetchData } from "../fetchData";
 
 
 export default function ElementsComponent(): JSX.Element {

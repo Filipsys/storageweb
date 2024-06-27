@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Fullscreen } from "@react-three/uikit";
-import AddElementButton from "./AddElementButton";
-import ContainersComponent from "./ContainersComponent";
+import AddElementButton from "./components/AddElementButton";
+import ContainersComponent from "./components/ContainersComponent";
 import Navbar from "./Navbar";
 
 import "./index.css";
