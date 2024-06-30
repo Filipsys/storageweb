@@ -4,6 +4,7 @@ import { Fullscreen } from "@react-three/uikit";
 import AddElementButton from "./components/AddElementButton";
 import ContainersComponent from "./components/ContainersComponent";
 import Navbar from "./components/Navbar";
+import Grid from "./components/Grid";
 
 import "./index.css";
 import "./App.css";
@@ -17,10 +18,12 @@ const App = (data: any) => {
         <StrictMode>
             <Canvas style={{ backgroundColor: "#161718" }}>
                 <Fullscreen flexDirection="row" gap={10} positionType={"relative"}>
+                    <Grid />
                     <AddElementButton />
                     <Navbar />
 
                     <ContainersComponent data={data} />
+
                 </Fullscreen>
             </Canvas>
         </StrictMode>
