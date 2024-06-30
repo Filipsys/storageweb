@@ -72,7 +72,7 @@ const Navbar = () => {
                 <Container width={40} height={40} borderRadius={5} backgroundOpacity={0.5} backgroundColor={"#232329"} margin={5} justifyContent={"center"} alignItems={"center"} hover={{ backgroundColor: "#1d1d22" }}>
                     <Container width={16} height={16}>
                         <Svg opacity={0.5} width={20} height={20}
-                            src="https://raw.githubusercontent.com/google/material-design-icons/40811b1dea7c91e4221d353a35c10490b93e8778/symbols/web/add_photo_alternate/materialsymbolsoutlined/add_photo_alternate_20px.svg"
+                            src="https://raw.githubusercontent.com/google/material-design-icons/40811b1dea7c91e4221d353a35c10490b93e8778/symbols/web/photo/materialsymbolsoutlined/photo_20px.svg"
                             color={"white"} />
                     </Container>
                 </Container>
@@ -80,7 +80,7 @@ const Navbar = () => {
                 <Container width={40} height={40} borderRadius={5} backgroundOpacity={0.5} backgroundColor={"#232329"} margin={5} justifyContent={"center"} alignItems={"center"} hover={{ backgroundColor: "#1d1d22" }}>
                     <Container width={16} height={16}>
                         <Svg opacity={0.5} width={20} height={20}
-                            src="https://raw.githubusercontent.com/google/material-design-icons/40811b1dea7c91e4221d353a35c10490b93e8778/symbols/web/ads_click/materialsymbolsoutlined/ads_click_wght500_20px.svg"
+                            src="https://raw.githubusercontent.com/google/material-design-icons/40811b1dea7c91e4221d353a35c10490b93e8778/symbols/web/article/materialsymbolsoutlined/article_wght500_20px.svg"
                             color={"white"} />
                     </Container>
                 </Container>
