@@ -6,7 +6,7 @@ import { Container, Svg } from "@react-three/uikit";
 
 const Grid = () => {
     console.log("grid");
-    
+
     return (
         <Container positionType={"absolute"} zIndexOffset={100}>
             <Svg src={"../assets/grid.svg"}/>

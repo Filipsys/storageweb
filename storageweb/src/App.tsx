@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Fullscreen } from "@react-three/uikit";
+import { Fullscreen, Svg } from "@react-three/uikit";
 import AddElementButton from "./components/AddElementButton";
 import ContainersComponent from "./components/ContainersComponent";
 import Navbar from "./components/Navbar";
@@ -19,11 +19,10 @@ const App = (data: any) => {
             <Canvas style={{ backgroundColor: "#161718" }}>
                 <Fullscreen flexDirection="row" gap={10} positionType={"relative"}>
                     <Grid />
-                    <AddElementButton />
+                    {/* <AddElementButton /> */}
                     <Navbar />
 
                     <ContainersComponent data={data} />
-
                 </Fullscreen>
             </Canvas>
         </StrictMode>
