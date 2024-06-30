@@ -62,7 +62,7 @@ const Navbar = () => {
                 </Container>
 
                 <Container width={40} height={40} borderRadius={5} backgroundOpacity={0.5} backgroundColor={"#232329"} margin={5} justifyContent={"center"} alignItems={"center"} hover={{ backgroundColor: "#1d1d22" }}>
-                    <Container width={16} height={16}>
+                    <Container width={19} height={19} justifyContent={"center"} alignItems={"center"} transformRotateZ={45}>
                         <Svg opacity={0.5} width={20} height={20}
                             src="https://raw.githubusercontent.com/google/material-design-icons/40811b1dea7c91e4221d353a35c10490b93e8778/symbols/web/link/materialsymbolsoutlined/link_20px.svg"
                             color={"white"} />
