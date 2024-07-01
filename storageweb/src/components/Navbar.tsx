@@ -10,7 +10,7 @@ import { Container, Svg, Text } from "@react-three/uikit";
 
 const Navbar = () => {
     return (
-        <Container width={"100%"} height={50} positionType={"absolute"} positionTop={0} positionLeft={0} justifyContent={"center"} alignItems={"center"} marginTop={15}>
+        <Container width={"100%"} height={50} positionType={"absolute"} positionTop={0} positionLeft={0} justifyContent={"center"} alignItems={"center"} marginTop={15} zIndexOffset={100}>
             <Container width={"auto"} justifyContent={"space-around"} alignItems={"center"} backgroundColor={"#232329"} borderRadius={10} padding={2} borderTopRightRadius={0} borderBottomRightRadius={0}>
                 <Container width={40} height={40} borderRadius={5} backgroundOpacity={0.5} backgroundColor={"#232329"} margin={5} justifyContent={"center"} alignItems={"center"} hover={{ backgroundColor: "#31303b" }}>
                     <Container width={16} height={16}>

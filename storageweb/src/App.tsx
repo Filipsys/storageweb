@@ -18,11 +18,11 @@ const App = (data: any) => {
         <StrictMode>
             <Canvas style={{ backgroundColor: "#161718" }}>
                 <Fullscreen flexDirection="row" gap={10} positionType={"relative"}>
-                    <Grid />
                     {/* <AddElementButton /> */}
                     <Navbar />
 
                     <ContainersComponent data={data} />
+                    <Grid />
                 </Fullscreen>
             </Canvas>
         </StrictMode>

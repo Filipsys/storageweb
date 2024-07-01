@@ -101,6 +101,7 @@ const ContainersComponent: React.FC<ContainersComponentProps> = ({ data }) => {
                         positionTop={position?.y || element.y}
                         positionLeft={position?.x || element.x}
                         onPointerDown={(e) => handleDragStart(element.id, e)}
+                        zIndexOffset={99}
                     >
                         <Text fontSize={20} color={element.color} verticalAlign="top">{element.data}</Text>
                         <Container

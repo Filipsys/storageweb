@@ -1,5 +1,6 @@
 import express from "express";
 import { Database } from "bun:sqlite";
+import { join } from "path";
 
 
 // =====/=====/=====/=====
@@ -11,6 +12,7 @@ const port = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(join(__dirname, "assets")));
 
 import cors from "cors";
 const corsOptions = {
@@ -43,6 +45,16 @@ app.get("/api/data", (_request: unknown, response: { send: (arg0: unknown) => vo
   }));
 
   response.send(data);
+});
+
+app.get(`/assets`, (request: express.Request, response: express.Response) => {
+  const { path } = request.query;
+
+  if (typeof path !== "string") {
+    return response.status(400).send({ error: "Invalid path" });
+  }
+
+  response.sendFile(join(__dirname, "assets", path));
 });
 
 
