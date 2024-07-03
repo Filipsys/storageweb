@@ -19,9 +19,9 @@ const App = (data: any) => {
             <Canvas style={{ backgroundColor: "#161718" }}>
                 <Fullscreen flexDirection="row" gap={10} positionType={"relative"}>
                     {/* <AddElementButton /> */}
-                    <Navbar />
+                    {/* <Navbar /> */}
 
-                    <ContainersComponent data={data} />
+                    {/* <ContainersComponent data={data} /> */}
                     <Grid />
                 </Fullscreen>
             </Canvas>

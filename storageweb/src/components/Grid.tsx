@@ -5,14 +5,16 @@ import { Html } from "@react-three/drei";
 
 const Grid = () => {
     return (
-        <Container positionType={"relative"} width={"100%"} height={"100%"} backgroundColor={"blue"}>
+        <Container positionType={"relative"} width={"100%"} height={"100%"}>
             <Html>
                 <div style={{
-                    width: "200vw",
+                    width: "200%",
                     height: "100%",
-                    backgroundImage: 
+                    backgroundImage: "radial-gradient(circle, rgba(250, 128, 114, 0.6) 10%, transparent 10%",
+                    backgroundSize: "50px 50px",
+                    backgroundPosition: "50px 0",
+                    backgroundRepeat: "repeat", 
                 }}>
-
                 </div>
             </Html>
         </Container>
