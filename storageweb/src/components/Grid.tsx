@@ -5,21 +5,20 @@ import { Html } from "@react-three/drei";
 
 const Grid = () => {
     return (
-        <Container positionType={"relative"} width={"100%"} height={"100%"}>
-            <Html>
+        <Container width={"100%"} height={"100%"}>
+            {/* <Html>
                 <div style={{
-                    width: "200%",
-                    height: "100%",
-                    backgroundImage: "radial-gradient(circle, rgba(250, 128, 114, 0.6) 10%, transparent 10%",
-                    backgroundSize: "50px 50px",
-                    backgroundPosition: "50px 0",
-                    backgroundRepeat: "repeat", 
-                }}>
+                    width: '100vw',
+                    height: '100vh',
+                    backgroundImage: 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 10%, transparent 10%)',
+                    backgroundSize: '30px 30px',
+                    }}>
                 </div>
-            </Html>
+            </Html> */}
         </Container>
     );
 }
+
 {/* <Svg src={"http://localhost:3000/assets?path=grid.svg"} width={"60%"} height={"60%"} color={"white"} opacity={0.2} positionLeft={"-20%"} positionTop={"-20%"} /> */}
 {/* <Svg src={"http://localhost:3000/assets?path=grid.svg"} width={"60%"} height={"60%"} color={"white"} opacity={0.2} positionLeft={"-20.2%"} positionTop={"-20%"} /> */}
 {/* <Svg src={"http://localhost:3000/assets?path=grid.svg"} width={"60%"} height={"60%"} color={"white"} opacity={0.2} positionLeft={"-20%"} positionTop={"-40%"} /> */}
