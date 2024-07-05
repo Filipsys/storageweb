@@ -1,10 +1,7 @@
 import { StrictMode } from "react";
-import { Canvas } from "@react-three/fiber";
-import { Fullscreen, Svg } from "@react-three/uikit";
-import AddElementButton from "./components/AddElementButton";
-import ContainersComponent from "./components/ContainersComponent";
 import Navbar from "./components/Navbar";
 import Grid from "./components/Grid";
+import ContainersComponent from "./components/ContainersComponent";
 
 import "./index.css";
 import "./App.css";
@@ -16,15 +13,21 @@ import "./App.css";
 const App = (data: any) => {
     return (
         <StrictMode>
-            <Canvas style={{ backgroundColor: "#161718" }}>
+            {/* <Canvas style={{ backgroundColor: "#161718" }}>
                 <Fullscreen flexDirection="row" gap={10} positionType={"relative"}>
-                    {/* <AddElementButton /> */}
-                    {/* <Navbar /> */}
+                    <AddElementButton />
+                    <Navbar />
 
-                    {/* <ContainersComponent data={data} /> */}
-                    <Grid />
+                    
+                    
                 </Fullscreen>
-            </Canvas>
+            </Canvas> */}
+
+            <Navbar />
+
+            <ContainersComponent data={data} />
+
+            <Grid />
         </StrictMode>
     );
 };
